@@ -14,7 +14,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,17 +33,17 @@ class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
+    private final AuthenticationMapperFactory authenticationMapperFactory;
 
     public AuthenticationController(AuthenticationManager authenticationManager,
                                     UserRepository userRepository,
-                                    PasswordEncoder passwordEncoder,
-                                    JwtUtils jwtUtils) {
+                                    JwtUtils jwtUtils,
+                                    AuthenticationMapperFactory authenticationMapperFactory) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
         this.jwtUtils = jwtUtils;
+        this.authenticationMapperFactory = authenticationMapperFactory;
     }
 
     @PostMapping("/sign-in")
@@ -72,7 +71,12 @@ class AuthenticationController {
                 .setToken(jwt)
                 .setUsername(userDetails.getUsername())
                 .setEmail(userDetails.getEmail())
+                .setPhone(userDetails.getPhone())
                 .setRoles(roles)
+                .setFirstName(userDetails.getFirstName())
+                .setLastName(userDetails.getLastName())
+                .setSchoolName(userDetails.getSchoolName())
+                .setSchoolAddress(userDetails.getSchoolAddress())
                 .build());
     }
 
@@ -93,12 +97,7 @@ class AuthenticationController {
                     .body(new MessageResponse("Error: Email is already in use!"));
         }
 
-        User user = User.builder()
-                .setUsername(signUpRequest.getUsername())
-                .setEmail(signUpRequest.getEmail())
-                .setPassword(passwordEncoder.encode(signUpRequest.getPassword()))
-                .setRole(signUpRequest.getRole())
-                .build();
+        User user = authenticationMapperFactory.getMapper(signUpRequest).mapToUser(signUpRequest);
 
         userRepository.save(user);
 

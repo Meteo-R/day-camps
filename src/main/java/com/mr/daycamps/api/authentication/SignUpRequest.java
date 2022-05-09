@@ -1,5 +1,7 @@
 package com.mr.daycamps.api.authentication;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.mr.daycamps.domain.authentication.Role;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,20 +12,30 @@ import javax.validation.constraints.Size;
 
 @Getter
 @Setter
-class SignUpRequest {
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "role")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = ParentSignUpRequest.class, name = "ROLE_PARENT"),
+        @JsonSubTypes.Type(value = SchoolSignUpRequest.class, name = "ROLE_SCHOOL")
+})
+abstract class SignUpRequest {
 
     @NotBlank
     @Size(min = 3, max = 20)
-    private String username;
+    protected String username;
 
     @NotBlank
     @Size(max = 50)
     @Email
-    private String email;
+    protected String email;
+
+    @NotBlank
+    protected String phone;
 
     @NotBlank
     @Size(min = 6)
-    private String password;
+    protected String password;
 
-    private Role role;
+    @NotBlank
+    protected Role role;
+
 }

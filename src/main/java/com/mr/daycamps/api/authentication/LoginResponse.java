@@ -10,14 +10,33 @@ class LoginResponse {
     private final String tokenType;
     private final String username;
     private final String email;
+    private final String phone;
     private final List<String> roles;
+    private final String firstName;
+    private final String lastName;
+    private final String schoolName;
+    private final String schoolAddress;
 
-    private LoginResponse(String token, String tokenType, String username, String email, List<String> roles) {
+    private LoginResponse(String token,
+                          String tokenType,
+                          String username,
+                          String email,
+                          String phone,
+                          List<String> roles,
+                          String firstName,
+                          String lastName,
+                          String schoolName,
+                          String schoolAddress) {
         this.token = token;
         this.tokenType = tokenType;
         this.username = username;
         this.email = email;
+        this.phone = phone;
         this.roles = roles;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.schoolName = schoolName;
+        this.schoolAddress = schoolAddress;
     }
 
     public static LoginResponseBuilder builder() {
@@ -29,7 +48,12 @@ class LoginResponse {
         private String tokenType = "Bearer";
         private String username;
         private String email;
+        private String phone;
         private List<String> roles;
+        private String firstName;
+        private String lastName;
+        private String schoolName;
+        private String schoolAddress;
 
         LoginResponseBuilder() {
         }
@@ -54,17 +78,51 @@ class LoginResponse {
             return this;
         }
 
+        public LoginResponseBuilder setPhone(String phone) {
+            this.phone = phone;
+            return this;
+        }
+
         public LoginResponseBuilder setRoles(List<String> roles) {
             this.roles = roles;
             return this;
         }
 
+        public LoginResponseBuilder setFirstName(String firstName) {
+            this.firstName = firstName;
+            return this;
+        }
+
+        public LoginResponseBuilder setLastName(String lastName) {
+            this.lastName = lastName;
+            return this;
+        }
+
+        public LoginResponseBuilder setSchoolName(String schoolName) {
+            this.schoolName = schoolName;
+            return this;
+        }
+
+        public LoginResponseBuilder setSchoolAddress(String schoolAddress) {
+            this.schoolAddress = schoolAddress;
+            return this;
+        }
+
         public LoginResponse build() {
-            return new LoginResponse(token, tokenType, username, email, roles);
+            return new LoginResponse(token, tokenType, username, email, phone, roles, firstName, lastName, schoolName, schoolAddress);
         }
 
         public String toString() {
-            return "LoginResponse.LoginResponseBuilder(token=" + this.token + ", tokenType=" + this.tokenType + ", username=" + this.username + ", email=" + this.email + ", roles=" + this.roles + ")";
+            return "LoginResponse.LoginResponseBuilder(" +
+                    "token=" + this.token + ", " +
+                    "tokenType=" + this.tokenType + ", " +
+                    "username=" + this.username + ", " +
+                    "email=" + this.email + ", " +
+                    "roles=" + this.roles + ", " +
+                    "firstName=" + this.firstName + ", " +
+                    "lastName=" + this.lastName + ", " +
+                    "schoolName=" + this.schoolName + ", " +
+                    "schoolAddress=" + this.schoolAddress + ")";
         }
     }
 
