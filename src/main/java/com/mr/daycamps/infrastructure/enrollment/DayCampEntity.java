@@ -21,6 +21,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -57,21 +58,21 @@ public class DayCampEntity {
     @Column(name = "DESCRIPTION", nullable = false)
     private String description;
 
-    @NotBlank
+    @NotNull
     @Column(name = "START_DATE", nullable = false)
     private LocalDate startDate;
 
-    @NotBlank
+    @NotNull
     @Column(name = "END_DATE", nullable = false)
     private LocalDate endDate;
 
-    @NotBlank
+    @NotNull
     @Column(name = "PRICE", nullable = false)
     private BigDecimal price;
 
-    @NotBlank
+    @NotNull
     @Column(name = "CAPACITY", nullable = false)
-    private int capacity;
+    private Integer capacity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SCHOOL_ID", nullable = false)
