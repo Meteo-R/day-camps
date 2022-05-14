@@ -12,12 +12,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/parent/children")
@@ -42,15 +44,31 @@ class ChildController {
     @PreAuthorize("hasRole('PARENT')")
     public ResponseEntity<?> addChild(@Valid @RequestBody AddChildRequest addChildRequest) {
         Child child = childMapper.mapAddChildRequest(addChildRequest);
-        UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Parent parent = principalMapper.mapParent(principal);
+        Parent parent = getLoggedParent();
 
         ChildEntity addedChild = parentRepository.addChild(parent, child);
 
-        AddChildResponse addChildResponse = childMapper.mapToAddChildResponse(addedChild);
+        ChildResponse addChildResponse = childMapper.mapToChildResponse(addedChild);
         LOGGER.info("Child: " + addChildResponse.getFirstName() + " " + addChildResponse.getLastName()
                 + " added with id: " + addChildResponse.getId());
         return ResponseEntity.ok(addChildResponse);
+    }
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('PARENT')")
+    public ResponseEntity<?> getChildren() {
+        Parent parent = getLoggedParent();
+
+        List<ChildEntity> children = parentRepository.getChildren(parent);
+
+        ChildrenResponse childrenResponse = childMapper.mapToChildrenResponse(children);
+        LOGGER.info(childrenResponse.getChildren().size() + " children found for user " + parent.getUsername());
+        return ResponseEntity.ok(childrenResponse);
+    }
+
+    private Parent getLoggedParent() {
+        UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return principalMapper.mapParent(principal);
     }
 
 }

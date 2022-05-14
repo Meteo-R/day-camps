@@ -7,10 +7,14 @@ import com.mr.daycamps.infrastructure.enrollment.ChildEntity;
 import com.mr.daycamps.infrastructure.enrollment.ChildJpaRepository;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Component
 class ParentRepositoryImpl implements ParentRepository {
+
+    public static final String PARENT_NOT_FOUND_MESSAGE = "Parent with username: %s not found in repository!";
 
     private final ParentJpaRepository parentJpaRepository;
     private final ChildJpaRepository childJpaRepository;
@@ -23,11 +27,19 @@ class ParentRepositoryImpl implements ParentRepository {
     @Override
     public ChildEntity addChild(Parent parent, Child child) {
         Optional<ParentEntity> parentEntityOptional = parentJpaRepository.findByUsername(parent.getUsername());
-        return parentEntityOptional.map(parentEntity -> persistChild(child, parentEntity))
-                .orElseThrow(() -> new IllegalStateException("Parent with username: " + parent.getUsername() + " not found in repository!"));
+        return parentEntityOptional.map(parentEntity -> saveChild(child, parentEntity))
+                .orElseThrow(() -> new IllegalStateException(String.format(PARENT_NOT_FOUND_MESSAGE, parent.getUsername())));
     }
 
-    private ChildEntity persistChild(Child child, ParentEntity parentEntity) {
+    @Override
+    public List<ChildEntity> getChildren(Parent parent) {
+        Optional<ParentEntity> parentEntityOptional = parentJpaRepository.findByUsername(parent.getUsername());
+        
+        return parentEntityOptional.map(parentEntity -> new ArrayList<>(parentEntity.getChildren()))
+                .orElseThrow(() -> new IllegalStateException(String.format(PARENT_NOT_FOUND_MESSAGE, parent.getUsername())));
+    }
+
+    private ChildEntity saveChild(Child child, ParentEntity parentEntity) {
         ChildEntity childEntity = ChildEntity.builder()
                 .setFirstName(child.getFirstName())
                 .setLastName(child.getLastName())
