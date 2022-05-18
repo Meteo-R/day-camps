@@ -38,7 +38,12 @@ public class ParentEntity extends UserEntity {
     @Column(name = "LAST_NAME", nullable = false)
     private String lastName;
 
-    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(
+            mappedBy = "parent",
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            orphanRemoval = true
+    )
     private Set<ChildEntity> children = new HashSet<>();
 
 }
