@@ -69,11 +69,6 @@ class ChildController {
         return ResponseEntity.ok(childrenResponse);
     }
 
-    private Parent getLoggedParent() {
-        UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return principalMapper.mapParent(principal);
-    }
-
     @PutMapping(
             path = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE
@@ -84,7 +79,7 @@ class ChildController {
         Parent parent = getLoggedParent();
 
         parentRepository.updateChild(parent, childId, childUpdateData);
-
+        LOGGER.info("Child with id " + childId + " updated successfully");
         return ResponseEntity.noContent().build();
     }
 
@@ -93,7 +88,13 @@ class ChildController {
     public ResponseEntity<?> deleteChild(@PathVariable(name = "id") Long childId) {
         Parent parent = getLoggedParent();
         parentRepository.deleteChild(parent, childId);
+        LOGGER.info("Child deleted successfully");
         return ResponseEntity.noContent().build();
+    }
+
+    private Parent getLoggedParent() {
+        UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return principalMapper.mapParent(principal);
     }
 
 }
