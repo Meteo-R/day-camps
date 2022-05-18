@@ -12,4 +12,5 @@ public interface ParentRepository {
 
     List<ChildEntity> getChildren(Parent parent);
 
+    ChildEntity updateChild(Parent parent, Long id, Child childUpdateData);
 }

@@ -9,33 +9,33 @@ import java.util.Optional;
 @Component
 class UserRepositoryImpl implements UserRepository {
 
-    private final UserJpaRepository userJpaRepository;
+    private final UserDao userDao;
     private final UserMapperFactory userMapperFactory;
 
-    public UserRepositoryImpl(UserJpaRepository userJpaRepository, UserMapperFactory userMapperFactory) {
-        this.userJpaRepository = userJpaRepository;
+    public UserRepositoryImpl(UserDao userDao, UserMapperFactory userMapperFactory) {
+        this.userDao = userDao;
         this.userMapperFactory = userMapperFactory;
     }
 
     @Override
     public Optional<User> findByUsername(String username) {
-        Optional<UserEntity> userEntityOptional = userJpaRepository.findByUsername(username);
+        Optional<UserEntity> userEntityOptional = userDao.findByUsername(username);
         return userEntityOptional.map(userEntity -> userMapperFactory.getMapper(userEntity).mapUser(userEntity));
     }
 
     @Override
     public Boolean existsByUsername(String username) {
-        return userJpaRepository.existsByUsername(username);
+        return userDao.existsByUsername(username);
     }
 
     @Override
     public Boolean existsByEmail(String email) {
-        return userJpaRepository.existsByEmail(email);
+        return userDao.existsByEmail(email);
     }
 
     @Override
     public void save(User user) {
         UserEntity userEntity = userMapperFactory.getMapper(user).mapUser(user);
-        userJpaRepository.save(userEntity);
+        userDao.save(userEntity);
     }
 }

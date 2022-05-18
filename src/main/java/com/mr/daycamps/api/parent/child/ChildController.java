@@ -13,7 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,7 +44,7 @@ class ChildController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @PreAuthorize("hasRole('PARENT')")
-    public ResponseEntity<?> addChild(@Valid @RequestBody AddChildRequest addChildRequest) {
+    public ResponseEntity<?> addChild(@Valid @RequestBody AddUpdateChildRequest addChildRequest) {
         Child child = childMapper.mapAddChildRequest(addChildRequest);
         Parent parent = getLoggedParent();
 
@@ -69,6 +71,20 @@ class ChildController {
     private Parent getLoggedParent() {
         UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return principalMapper.mapParent(principal);
+    }
+
+    @PutMapping(
+            path = "/{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
+    @PreAuthorize("hasRole('PARENT')")
+    public ResponseEntity<?> modifyChild(@PathVariable(name = "id") Long childId, @Valid @RequestBody AddUpdateChildRequest updateChildRequest) {
+        Child childUpdateData = childMapper.mapAddChildRequest(updateChildRequest);
+        Parent parent = getLoggedParent();
+
+        parentRepository.updateChild(parent, childId, childUpdateData);
+
+        return ResponseEntity.noContent().build();
     }
 
 }

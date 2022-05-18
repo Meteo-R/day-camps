@@ -7,7 +7,7 @@ import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
-class AddChildRequest {
+class AddUpdateChildRequest {
 
     @NotBlank
     private String firstName;

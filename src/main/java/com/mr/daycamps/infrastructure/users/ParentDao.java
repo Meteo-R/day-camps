@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ParentJpaRepository extends JpaRepository<ParentEntity, Long> {
+public interface ParentDao extends JpaRepository<ParentEntity, Long> {
 
     Optional<ParentEntity> findByUsername(String username);
 

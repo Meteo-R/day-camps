@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 @Component
 class ChildMapper {
 
-    Child mapAddChildRequest(AddChildRequest addChildRequest) {
+    Child mapAddChildRequest(AddUpdateChildRequest addChildRequest) {
         return Child.builder()
                 .setFirstName(addChildRequest.getFirstName())
                 .setLastName(addChildRequest.getLastName())
