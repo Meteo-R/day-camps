@@ -1,7 +1,6 @@
 package com.mr.daycamps.infrastructure.users;
 
 import com.mr.daycamps.domain.authentication.Parent;
-import com.mr.daycamps.domain.parent.ParentRepository;
 import com.mr.daycamps.domain.parent.child.Child;
 import com.mr.daycamps.infrastructure.enrollment.ChildDao;
 import com.mr.daycamps.infrastructure.enrollment.ChildEntity;
@@ -15,8 +14,8 @@ import java.util.Optional;
 @Component
 class ParentRepositoryImpl implements ParentRepository {
 
-    public static final String PARENT_NOT_FOUND_MESSAGE = "Parent with username %s not found in repository!";
-    public static final String CHILD_NOT_FOUND_MESSAGE = "Parent with username %s does not have child with id %d";
+    private static final String PARENT_NOT_FOUND_MESSAGE = "Parent with username %s not found in repository!";
+    private static final String CHILD_NOT_FOUND_MESSAGE = "Parent with username %s does not have child with id %d";
 
     private final ParentDao parentDao;
     private final ChildDao childDao;

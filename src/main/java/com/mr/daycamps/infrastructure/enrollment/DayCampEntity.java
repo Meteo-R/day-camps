@@ -33,7 +33,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Builder(setterPrefix = "set")
 public class DayCampEntity {
 
     @Id
@@ -74,7 +74,7 @@ public class DayCampEntity {
     @Column(name = "CAPACITY", nullable = false)
     private Integer capacity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "SCHOOL_ID", nullable = false)
     private SchoolEntity school;
 

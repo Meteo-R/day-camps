@@ -1,6 +1,7 @@
 package com.mr.daycamps.api.commons;
 
 import com.mr.daycamps.domain.authentication.Parent;
+import com.mr.daycamps.domain.authentication.School;
 import com.mr.daycamps.domain.authentication.UserDetailsImpl;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +22,17 @@ public class PrincipalMapper {
                 .setRole(roleAuthorityMapper.mapToRole(parentPrincipal.getAuthorities().iterator().next().getAuthority()))
                 .setFirstName(parentPrincipal.getFirstName())
                 .setLastName(parentPrincipal.getLastName())
+                .build();
+    }
+
+    public School mapSchool(UserDetailsImpl schoolPrincipal) {
+        return School.builder()
+                .setUsername(schoolPrincipal.getUsername())
+                .setEmail(schoolPrincipal.getEmail())
+                .setPhone(schoolPrincipal.getPhone())
+                .setRole(roleAuthorityMapper.mapToRole(schoolPrincipal.getAuthorities().iterator().next().getAuthority()))
+                .setName(schoolPrincipal.getSchoolName())
+                .setAddress(schoolPrincipal.getSchoolAddress())
                 .build();
     }
 }

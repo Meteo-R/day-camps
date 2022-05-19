@@ -1,4 +1,4 @@
-package com.mr.daycamps.domain.parent;
+package com.mr.daycamps.infrastructure.users;
 
 import com.mr.daycamps.domain.authentication.Parent;
 import com.mr.daycamps.domain.parent.child.Child;

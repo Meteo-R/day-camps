@@ -4,8 +4,9 @@ import com.mr.daycamps.api.commons.PrincipalMapper;
 import com.mr.daycamps.domain.authentication.Parent;
 import com.mr.daycamps.domain.authentication.UserDetailsImpl;
 import com.mr.daycamps.domain.parent.child.Child;
-import com.mr.daycamps.domain.parent.ParentRepository;
+import com.mr.daycamps.infrastructure.users.ParentRepository;
 import com.mr.daycamps.infrastructure.enrollment.ChildEntity;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -26,6 +27,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/parent/children")
+@AllArgsConstructor
 class ChildController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ChildController.class);
@@ -33,12 +35,6 @@ class ChildController {
     private final PrincipalMapper principalMapper;
     private final ChildMapper childMapper;
     private final ParentRepository parentRepository;
-
-    public ChildController(PrincipalMapper principalMapper, ChildMapper childMapper, ParentRepository parentRepository) {
-        this.principalMapper = principalMapper;
-        this.childMapper = childMapper;
-        this.parentRepository = parentRepository;
-    }
 
     @PostMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE,
