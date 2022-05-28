@@ -1,6 +1,10 @@
 package com.mr.daycamps.api.exception.handling;
 
 import com.mr.daycamps.domain.exception.ChildNotFoundException;
+import com.mr.daycamps.domain.exception.DayCampCapacityReachedException;
+import com.mr.daycamps.domain.exception.DayCampNotFoundException;
+import com.mr.daycamps.domain.exception.DayCampStartDatePassedException;
+import com.mr.daycamps.domain.exception.OverlappingDayCampsException;
 import com.mr.daycamps.domain.exception.ParentNotFoundException;
 import com.mr.daycamps.domain.exception.SchoolNotFoundException;
 import org.springframework.http.HttpHeaders;
@@ -17,11 +21,22 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     @ExceptionHandler(value = {
             ParentNotFoundException.class,
             SchoolNotFoundException.class,
-            ChildNotFoundException.class
+            ChildNotFoundException.class,
+            DayCampNotFoundException.class
     })
     protected ResponseEntity<?> handleNotFound(RuntimeException exception, WebRequest request) {
         String responseBody = exception.getMessage();
         return handleExceptionInternal(exception, responseBody, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    }
+
+    @ExceptionHandler(value = {
+            DayCampStartDatePassedException.class,
+            DayCampCapacityReachedException.class,
+            OverlappingDayCampsException.class
+    })
+    protected ResponseEntity<?> handleBadRequest(RuntimeException exception, WebRequest request) {
+        String responseBody = exception.getMessage();
+        return handleExceptionInternal(exception, responseBody, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
 }

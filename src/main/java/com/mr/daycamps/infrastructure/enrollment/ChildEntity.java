@@ -58,7 +58,7 @@ public class ChildEntity {
     @JoinColumn(name = "PARENT_ID", nullable = false)
     private ParentEntity parent;
 
-    @ManyToMany(mappedBy = "children")
+    @ManyToMany(mappedBy = "children", fetch = FetchType.LAZY)
     private Set<DayCampEntity> dayCamps = new HashSet<>();
 
 }
