@@ -5,7 +5,7 @@ import com.mr.daycamps.infrastructure.enrollment.DayCampEntity;
 import org.springframework.stereotype.Component;
 
 @Component
-class DayCampMapper {
+class DayCampApiMapper {
 
     public DayCamp mapAddDayCampRequest(AddDayCampRequest addDayCampRequest) {
         return DayCamp.builder()

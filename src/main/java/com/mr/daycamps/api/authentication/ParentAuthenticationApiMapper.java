@@ -6,8 +6,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-class ParentAuthenticationMapper extends AuthenticationMapper {
-    public ParentAuthenticationMapper(PasswordEncoder passwordEncoder) {
+class ParentAuthenticationApiMapper extends AuthenticationApiMapper {
+    public ParentAuthenticationApiMapper(PasswordEncoder passwordEncoder) {
         super(passwordEncoder);
     }
 

@@ -1,6 +1,6 @@
 package com.mr.daycamps.api.school.daycamp;
 
-import com.mr.daycamps.api.commons.PrincipalMapper;
+import com.mr.daycamps.api.commons.PrincipalApiMapper;
 import com.mr.daycamps.domain.authentication.School;
 import com.mr.daycamps.domain.authentication.UserDetailsImpl;
 import com.mr.daycamps.domain.school.daycamp.DayCamp;
@@ -27,8 +27,8 @@ class DayCampController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DayCampController.class);
 
-    private final PrincipalMapper principalMapper;
-    private final DayCampMapper dayCampMapper;
+    private final PrincipalApiMapper principalMapper;
+    private final DayCampApiMapper dayCampMapper;
     private final SchoolRepository schoolRepository;
 
     @PostMapping(

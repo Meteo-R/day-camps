@@ -6,11 +6,11 @@ import com.mr.daycamps.domain.authentication.UserDetailsImpl;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PrincipalMapper {
+public class PrincipalApiMapper {
 
-    private final RoleAuthorityMapper roleAuthorityMapper;
+    private final RoleAuthorityApiMapper roleAuthorityMapper;
 
-    public PrincipalMapper(RoleAuthorityMapper roleAuthorityMapper) {
+    public PrincipalApiMapper(RoleAuthorityApiMapper roleAuthorityMapper) {
         this.roleAuthorityMapper = roleAuthorityMapper;
     }
 

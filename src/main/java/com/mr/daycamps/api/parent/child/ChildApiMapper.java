@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-class ChildMapper {
+class ChildApiMapper {
 
     Child mapAddChildRequest(AddUpdateChildRequest addChildRequest) {
         return Child.builder()

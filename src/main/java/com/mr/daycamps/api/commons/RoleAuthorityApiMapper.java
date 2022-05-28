@@ -4,7 +4,7 @@ import com.mr.daycamps.domain.authentication.Role;
 import org.springframework.stereotype.Component;
 
 @Component
-class RoleAuthorityMapper {
+class RoleAuthorityApiMapper {
 
     public Role mapToRole(String authority) {
         return switch (authority) {

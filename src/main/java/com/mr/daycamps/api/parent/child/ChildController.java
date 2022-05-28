@@ -1,6 +1,6 @@
 package com.mr.daycamps.api.parent.child;
 
-import com.mr.daycamps.api.commons.PrincipalMapper;
+import com.mr.daycamps.api.commons.PrincipalApiMapper;
 import com.mr.daycamps.domain.authentication.Parent;
 import com.mr.daycamps.domain.authentication.UserDetailsImpl;
 import com.mr.daycamps.domain.parent.child.Child;
@@ -32,8 +32,8 @@ class ChildController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ChildController.class);
 
-    private final PrincipalMapper principalMapper;
-    private final ChildMapper childMapper;
+    private final PrincipalApiMapper principalMapper;
+    private final ChildApiMapper childMapper;
     private final ParentRepository parentRepository;
 
     @PostMapping(
