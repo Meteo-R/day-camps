@@ -4,6 +4,7 @@ import com.mr.daycamps.api.authentication.LoggedUserUtil;
 import com.mr.daycamps.domain.authentication.Parent;
 import com.mr.daycamps.domain.parent.child.enrollment.ChildEnrollmentService;
 import com.mr.daycamps.domain.parent.child.enrollment.Enrollment;
+import com.mr.daycamps.infrastructure.enrollment.TimelineLocation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -38,10 +40,10 @@ class ChildEnrollmentController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('PARENT')")
-    public ResponseEntity<?> getEnrollments() {
+    public ResponseEntity<?> getEnrollments(@RequestParam(required = false) List<TimelineLocation> timelineLocation) {
         Parent parent = loggedUserUtil.getLoggedParent();
         List<Enrollment> enrollments = childEnrollmentService.getEnrollments(parent);
-        EnrollmentsResponse enrollmentsResponse = enrollmentMapper.mapToEnrollmentsResponse(enrollments);
+        EnrollmentsResponse enrollmentsResponse = enrollmentMapper.mapToEnrollmentsResponse(enrollments, timelineLocation);
         return ResponseEntity.ok(enrollmentsResponse);
     }
 

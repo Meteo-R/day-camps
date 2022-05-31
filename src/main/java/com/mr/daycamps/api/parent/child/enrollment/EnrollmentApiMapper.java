@@ -1,9 +1,12 @@
 package com.mr.daycamps.api.parent.child.enrollment;
 
+import com.mr.daycamps.api.commons.TimelineLocationFilter;
 import com.mr.daycamps.api.parent.child.ChildResponse;
 import com.mr.daycamps.api.school.SchoolResponse;
 import com.mr.daycamps.api.school.daycamp.DayCampResponse;
 import com.mr.daycamps.domain.parent.child.enrollment.Enrollment;
+import com.mr.daycamps.infrastructure.enrollment.TimelineLocation;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
@@ -11,8 +14,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@AllArgsConstructor
 class EnrollmentApiMapper {
-    public EnrollmentsResponse mapToEnrollmentsResponse(List<Enrollment> enrollments) {
+
+    private final TimelineLocationFilter timelineLocationFilter;
+
+    public EnrollmentsResponse mapToEnrollmentsResponse(List<Enrollment> enrollments, List<TimelineLocation> timelineLocation) {
         return EnrollmentsResponse.builder()
                 .setEnrollments(enrollments.stream()
                         .map(enrollment -> EnrollmentResponse.builder()
@@ -38,6 +45,7 @@ class EnrollmentApiMapper {
                                                         .setPhone(dayCamp.getSchool().getPhone())
                                                         .build())
                                                 .build())
+                                        .filter(dayCamp -> timelineLocationFilter.doFilter(dayCamp.getStartDate(), dayCamp.getEndDate(), timelineLocation))
                                         .sorted(Comparator.comparing(DayCampResponse::getStartDate))
                                         .collect(Collectors.toList())
                                 )
