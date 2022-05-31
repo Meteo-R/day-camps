@@ -1,5 +1,6 @@
 package com.mr.daycamps.domain.parent.child.enrollment;
 
+import com.mr.daycamps.domain.authentication.Parent;
 import com.mr.daycamps.domain.exception.DayCampCapacityReachedException;
 import com.mr.daycamps.domain.exception.DayCampStartDatePassedException;
 import com.mr.daycamps.domain.exception.OverlappingDayCampsException;
@@ -7,10 +8,14 @@ import com.mr.daycamps.domain.parent.child.Child;
 import com.mr.daycamps.domain.parent.child.ChildRepository;
 import com.mr.daycamps.domain.school.daycamp.DayCamp;
 import com.mr.daycamps.domain.school.daycamp.DayCampRepository;
+import com.mr.daycamps.infrastructure.enrollment.ChildEntity;
+import com.mr.daycamps.infrastructure.users.ParentRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -18,6 +23,7 @@ class ChildEnrollmentServiceImpl implements ChildEnrollmentService {
 
     private ChildRepository childRepository;
     private DayCampRepository dayCampRepository;
+    private ParentRepository parentRepository;
 
     @Override
     public void enrollChild(Long childId, Long dayCampId) {
@@ -26,6 +32,18 @@ class ChildEnrollmentServiceImpl implements ChildEnrollmentService {
 
         validateEnrollmentPrerequisites(child, dayCamp);
         dayCampRepository.addChild(dayCampId, childId);
+    }
+
+    @Override
+    public List<Enrollment> getEnrollments(Parent parent) {
+        List<ChildEntity> children = parentRepository.getChildren(parent);
+
+        return children.stream()
+                .map(child -> Enrollment.builder()
+                        .setChild(child)
+                        .setDayCamps(child.getDayCamps())
+                        .build())
+                .collect(Collectors.toList());
     }
 
     private void validateEnrollmentPrerequisites(Child child, DayCamp dayCamp) {

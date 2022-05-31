@@ -1,5 +1,6 @@
 package com.mr.daycamps.api.school.daycamp;
 
+import com.mr.daycamps.api.school.SchoolResponse;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -10,7 +11,7 @@ import java.time.LocalDate;
 
 @Getter
 @Builder(setterPrefix = "set")
-class DayCampResponse {
+public class DayCampResponse {
 
     @NotNull
     private Long id;
@@ -32,4 +33,8 @@ class DayCampResponse {
 
     @NotNull
     private Integer capacity;
+
+    private Integer numberOfEnrolled;
+
+    private SchoolResponse school;
 }

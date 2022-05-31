@@ -1,8 +1,7 @@
 package com.mr.daycamps.api.school.daycamp;
 
-import com.mr.daycamps.api.commons.PrincipalApiMapper;
+import com.mr.daycamps.api.authentication.LoggedUserUtil;
 import com.mr.daycamps.domain.authentication.School;
-import com.mr.daycamps.domain.authentication.UserDetailsImpl;
 import com.mr.daycamps.domain.school.daycamp.DayCamp;
 import com.mr.daycamps.infrastructure.enrollment.DayCampEntity;
 import com.mr.daycamps.infrastructure.users.SchoolRepository;
@@ -12,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +25,7 @@ class DayCampController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DayCampController.class);
 
-    private final PrincipalApiMapper principalMapper;
+    private final LoggedUserUtil loggedUserUtil;
     private final DayCampApiMapper dayCampMapper;
     private final SchoolRepository schoolRepository;
 
@@ -38,7 +36,7 @@ class DayCampController {
     @PreAuthorize("hasRole('SCHOOL')")
     public ResponseEntity<?> addDayCamp(@Valid @RequestBody AddDayCampRequest addDayCampRequest) {
         DayCamp dayCamp = dayCampMapper.mapAddDayCampRequest(addDayCampRequest);
-        School school = getLoggedSchool();
+        School school = loggedUserUtil.getLoggedSchool();
 
         DayCampEntity addedDayCamp = schoolRepository.addDayCamp(school, dayCamp);
 
@@ -46,11 +44,5 @@ class DayCampController {
         LOGGER.info("Day camp: " + addDayCampResponse.getName() + " " + " added with id: " + addDayCampResponse.getId());
         return ResponseEntity.ok(addDayCampResponse);
     }
-
-    private School getLoggedSchool() {
-        UserDetailsImpl principal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return principalMapper.mapSchool(principal);
-    }
-
 
 }

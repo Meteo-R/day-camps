@@ -6,6 +6,7 @@ import com.mr.daycamps.domain.exception.ParentNotFoundException;
 import com.mr.daycamps.domain.parent.child.Child;
 import com.mr.daycamps.infrastructure.enrollment.ChildDao;
 import com.mr.daycamps.infrastructure.enrollment.ChildEntity;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -14,15 +15,11 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Component
+@AllArgsConstructor
 class ParentRepositoryImpl implements ParentRepository {
 
     private final ParentDao parentDao;
     private final ChildDao childDao;
-
-    public ParentRepositoryImpl(ParentDao parentDao, ChildDao childDao) {
-        this.parentDao = parentDao;
-        this.childDao = childDao;
-    }
 
     @Override
     public ChildEntity addChild(Parent parent, Child child) {

@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Builder(setterPrefix = "set")
-class ChildResponse {
+public class ChildResponse {
 
     @NotNull
     private final Long id;
