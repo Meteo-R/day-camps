@@ -6,4 +6,5 @@ public interface DayCampRepository {
 
     void addChild(Long dayCampId, Long childId);
 
+    void deleteChild(Long dayCampId, Long childId);
 }

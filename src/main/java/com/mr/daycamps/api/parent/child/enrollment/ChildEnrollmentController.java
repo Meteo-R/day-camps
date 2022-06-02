@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,6 +46,13 @@ class ChildEnrollmentController {
         List<Enrollment> enrollments = childEnrollmentService.getEnrollments(parent);
         EnrollmentsResponse enrollmentsResponse = enrollmentMapper.mapToEnrollmentsResponse(enrollments, timelineLocation);
         return ResponseEntity.ok(enrollmentsResponse);
+    }
+
+    @DeleteMapping(path = "/{childId}/{dayCampId}")
+    @PreAuthorize("hasRole('PARENT')")
+    public ResponseEntity<?> unenrollChild(@PathVariable(name = "childId") Long childId, @PathVariable(name = "dayCampId") Long dayCampId) {
+        childEnrollmentService.unenrollChild(childId, dayCampId);
+        return ResponseEntity.noContent().build();
     }
 
 }

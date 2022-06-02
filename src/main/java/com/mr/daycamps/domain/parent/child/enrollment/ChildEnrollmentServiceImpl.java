@@ -1,6 +1,8 @@
 package com.mr.daycamps.domain.parent.child.enrollment;
 
 import com.mr.daycamps.domain.authentication.Parent;
+import com.mr.daycamps.domain.exception.ChildAlreadyEnrolledException;
+import com.mr.daycamps.domain.exception.ChildNotEnrolledException;
 import com.mr.daycamps.domain.exception.DayCampCapacityReachedException;
 import com.mr.daycamps.domain.exception.DayCampStartDatePassedException;
 import com.mr.daycamps.domain.exception.OverlappingDayCampsException;
@@ -46,15 +48,25 @@ class ChildEnrollmentServiceImpl implements ChildEnrollmentService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public void unenrollChild(Long childId, Long dayCampId) {
+        Child child = childRepository.getChildWithDayCamps(childId);
+        DayCamp dayCamp = dayCampRepository.getDayCampWithChildren(dayCampId);
+
+        validateUnenrollmentPrerequisites(child, dayCamp);
+        dayCampRepository.deleteChild(dayCampId, childId);
+    }
+
     private void validateEnrollmentPrerequisites(Child child, DayCamp dayCamp) {
-        validateDayCampStartDateIsAfterToday(dayCamp);
+        validateChildIsNotYetEnrolledInThisDayCamp(child, dayCamp);
+        validateDayCampHasNotStartedYet(dayCamp);
         validateDayCampCanAcceptAnotherChild(dayCamp);
         validateChildHasNoOtherDayCampsAtThatTime(child, dayCamp);
     }
 
-    private void validateDayCampStartDateIsAfterToday(DayCamp dayCamp) {
-        if (!LocalDate.now().isBefore(dayCamp.getStartDate())) {
-            throw new DayCampStartDatePassedException(dayCamp.getStartDate());
+    private void validateChildIsNotYetEnrolledInThisDayCamp(Child child, DayCamp dayCamp) {
+        if (isAlreadyEnrolled(child, dayCamp)) {
+            throw new ChildAlreadyEnrolledException(child.getId(), dayCamp.getId());
         }
     }
 
@@ -74,6 +86,35 @@ class ChildEnrollmentServiceImpl implements ChildEnrollmentService {
         return child.getDayCamps().stream()
                 .anyMatch(attendedCamp -> !dayCamp.getStartDate().isAfter(attendedCamp.getEndDate())
                         && !dayCamp.getEndDate().isBefore(attendedCamp.getStartDate()));
+    }
+
+    private void validateUnenrollmentPrerequisites(Child child, DayCamp dayCamp) {
+        validateChildIsCurrentlyEnrolled(child, dayCamp);
+        validateDayCampHasNotStartedYet(dayCamp);
+    }
+
+    private void validateChildIsCurrentlyEnrolled(Child child, DayCamp dayCamp) {
+        if (isNotEnrolled(child, dayCamp)) {
+            throw new ChildNotEnrolledException(child.getId(), dayCamp.getId());
+        }
+    }
+
+    private boolean isNotEnrolled(Child child, DayCamp dayCamp) {
+        return !isAlreadyEnrolled(child, dayCamp);
+    }
+
+    private boolean isAlreadyEnrolled(Child child, DayCamp dayCamp) {
+        return child.getDayCamps().stream()
+                .map(DayCamp::getId)
+                .collect(Collectors.toList())
+                .contains(dayCamp.getId());
+    }
+
+    private void validateDayCampHasNotStartedYet(DayCamp dayCamp) {
+        LocalDate today = LocalDate.now();
+        if (!today.isBefore(dayCamp.getStartDate())) {
+            throw new DayCampStartDatePassedException(dayCamp.getStartDate());
+        }
     }
 
 }

@@ -1,5 +1,7 @@
 package com.mr.daycamps.api.exception.handling;
 
+import com.mr.daycamps.domain.exception.ChildAlreadyEnrolledException;
+import com.mr.daycamps.domain.exception.ChildNotEnrolledException;
 import com.mr.daycamps.domain.exception.ChildNotFoundException;
 import com.mr.daycamps.domain.exception.DayCampCapacityReachedException;
 import com.mr.daycamps.domain.exception.DayCampNotFoundException;
@@ -30,9 +32,11 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     }
 
     @ExceptionHandler(value = {
+            ChildAlreadyEnrolledException.class,
             DayCampStartDatePassedException.class,
             DayCampCapacityReachedException.class,
-            OverlappingDayCampsException.class
+            OverlappingDayCampsException.class,
+            ChildNotEnrolledException.class
     })
     protected ResponseEntity<?> handleBadRequest(RuntimeException exception, WebRequest request) {
         String responseBody = exception.getMessage();

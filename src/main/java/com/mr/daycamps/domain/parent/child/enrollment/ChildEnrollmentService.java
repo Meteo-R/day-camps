@@ -9,4 +9,6 @@ public interface ChildEnrollmentService {
     void enrollChild(Long childId, Long dayCampId);
 
     List<Enrollment> getEnrollments(Parent parent);
+
+    void unenrollChild(Long childId, Long dayCampId);
 }
