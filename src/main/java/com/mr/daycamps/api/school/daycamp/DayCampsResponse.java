@@ -1,4 +1,4 @@
-package com.mr.daycamps.api.parent.child.enrollment;
+package com.mr.daycamps.api.school.daycamp;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
@@ -9,8 +9,8 @@ import java.util.List;
 @Getter
 @Builder(setterPrefix = "set")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-class EnrollmentsResponse {
+public class DayCampsResponse {
 
-    private final List<EnrollmentResponse> enrollments;
+    private List<DayCampResponse> dayCamps;
 
 }

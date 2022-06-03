@@ -8,6 +8,7 @@ import com.mr.daycamps.infrastructure.enrollment.DayCampEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Component
 class SchoolRepositoryImpl implements SchoolRepository {
@@ -24,6 +25,13 @@ class SchoolRepositoryImpl implements SchoolRepository {
     public DayCampEntity addDayCamp(School school, DayCamp dayCamp) {
         Optional<SchoolEntity> schoolEntityOptional = schoolDao.findByUsername(school.getUsername());
         return schoolEntityOptional.map(schoolEntity -> saveDayCamp(dayCamp, schoolEntity))
+                .orElseThrow(() -> new SchoolNotFoundException(school.getUsername()));
+    }
+
+    @Override
+    public Set<DayCampEntity> getDayCamps(School school) {
+        Optional<SchoolEntity> schoolEntityOptional = schoolDao.findByUsername(school.getUsername());
+        return schoolEntityOptional.map(SchoolEntity::getDayCamps)
                 .orElseThrow(() -> new SchoolNotFoundException(school.getUsername()));
     }
 
