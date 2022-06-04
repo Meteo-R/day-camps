@@ -2,6 +2,7 @@ package com.mr.daycamps.infrastructure.users;
 
 import com.mr.daycamps.domain.authentication.Parent;
 import com.mr.daycamps.domain.exception.ChildNotFoundException;
+import com.mr.daycamps.domain.exception.EnrolledChildDeletionAttemptException;
 import com.mr.daycamps.domain.exception.ParentNotFoundException;
 import com.mr.daycamps.domain.parent.child.Child;
 import com.mr.daycamps.infrastructure.enrollment.ChildDao;
@@ -64,8 +65,12 @@ class ParentRepositoryImpl implements ParentRepository {
                             .filter(childEntity -> Objects.equals(childEntity.getId(), childId))
                             .findAny()
                             .orElseThrow(() -> new ChildNotFoundException(parent.getUsername(), childId));
-                    parentEntity.getChildren().remove(foundChild);
-                    parentDao.save(parentEntity);
+                    if (foundChild.getDayCamps().size() == 0) {
+                        parentEntity.getChildren().remove(foundChild);
+                        parentDao.save(parentEntity);
+                    } else {
+                        throw new EnrolledChildDeletionAttemptException();
+                    }
                 },
                 () -> {
                     throw new ParentNotFoundException(parent.getUsername());
