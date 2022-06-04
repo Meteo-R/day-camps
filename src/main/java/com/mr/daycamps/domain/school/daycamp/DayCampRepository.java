@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface DayCampRepository {
 
-    DayCamp getDayCampWithChildren(Long dayCampId);
+    DayCampEntity getDayCamp(Long dayCampId);
 
     void addChild(Long dayCampId, Long childId);
 

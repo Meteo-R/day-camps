@@ -34,6 +34,11 @@ public class DayCampRepositoryImpl implements DayCampRepository {
     }
 
     @Override
+    public DayCampEntity getDayCamp(Long dayCampId) {
+        return dayCampDao.findById(dayCampId).orElseThrow(() -> new DayCampNotFoundException(dayCampId));
+    }
+
+    @Override
     public void addChild(Long dayCampId, Long childId) {
         ChildEntity childEntity = childDao.findById(childId).orElseThrow(() -> new ChildNotFoundException(childId));
         DayCampEntity dayCampEntity = dayCampDao.findById(dayCampId).orElseThrow(() -> new DayCampNotFoundException(dayCampId));
