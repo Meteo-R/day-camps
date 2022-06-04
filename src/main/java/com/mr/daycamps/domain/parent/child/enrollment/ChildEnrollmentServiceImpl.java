@@ -11,6 +11,7 @@ import com.mr.daycamps.domain.parent.child.ChildRepository;
 import com.mr.daycamps.domain.school.daycamp.DayCamp;
 import com.mr.daycamps.domain.school.daycamp.DayCampRepository;
 import com.mr.daycamps.infrastructure.enrollment.ChildEntity;
+import com.mr.daycamps.infrastructure.enrollment.DayCampEntity;
 import com.mr.daycamps.infrastructure.users.ParentRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -57,6 +58,16 @@ class ChildEnrollmentServiceImpl implements ChildEnrollmentService {
         dayCampRepository.deleteChild(dayCampId, childId);
     }
 
+    @Override
+    public List<DayCampEntity> getPossibleDayCampsForChild(Long childId) {
+        ChildEntity child = childRepository.getChild(childId);
+        return dayCampRepository.getAll().stream()
+                .filter(dayCamp -> dayCamp.getStartDate().isAfter(LocalDate.now()))
+                .filter(dayCamp -> dayCamp.getChildren().size() < dayCamp.getCapacity())
+                .filter(dayCamp -> !isDayCampOverlappingWithAnyOtherAttendedCamp(dayCamp, child))
+                .collect(Collectors.toList());
+    }
+
     private void validateEnrollmentPrerequisites(Child child, DayCamp dayCamp) {
         validateChildIsNotYetEnrolledInThisDayCamp(child, dayCamp);
         validateDayCampHasNotStartedYet(dayCamp);
@@ -82,7 +93,13 @@ class ChildEnrollmentServiceImpl implements ChildEnrollmentService {
         }
     }
 
-    private boolean isDayCampOverlappingWithAnyOtherAttendedCamp(DayCamp dayCamp, Child child) {
+    private boolean isDayCampOverlappingWithAnyOtherAttendedCamp(DayCamp dayCamp, Child child) { // TODO do wywalenia
+        return child.getDayCamps().stream()
+                .anyMatch(attendedCamp -> !dayCamp.getStartDate().isAfter(attendedCamp.getEndDate())
+                        && !dayCamp.getEndDate().isBefore(attendedCamp.getStartDate()));
+    }
+
+    private boolean isDayCampOverlappingWithAnyOtherAttendedCamp(DayCampEntity dayCamp, ChildEntity child) {
         return child.getDayCamps().stream()
                 .anyMatch(attendedCamp -> !dayCamp.getStartDate().isAfter(attendedCamp.getEndDate())
                         && !dayCamp.getEndDate().isBefore(attendedCamp.getStartDate()));

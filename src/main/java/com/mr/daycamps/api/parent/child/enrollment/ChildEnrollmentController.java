@@ -1,9 +1,11 @@
 package com.mr.daycamps.api.parent.child.enrollment;
 
 import com.mr.daycamps.api.authentication.LoggedUserUtil;
+import com.mr.daycamps.api.school.daycamp.DayCampsResponse;
 import com.mr.daycamps.domain.authentication.Parent;
 import com.mr.daycamps.domain.parent.child.enrollment.ChildEnrollmentService;
 import com.mr.daycamps.domain.parent.child.enrollment.Enrollment;
+import com.mr.daycamps.infrastructure.enrollment.DayCampEntity;
 import com.mr.daycamps.infrastructure.enrollment.TimelineLocation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
@@ -28,6 +30,17 @@ class ChildEnrollmentController {
     private final ChildEnrollmentService childEnrollmentService;
     private final EnrollmentApiMapper enrollmentMapper;
 
+    @GetMapping(
+            path = "/possible-day-camps/{childId}",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @PreAuthorize("hasRole('PARENT')")
+    public ResponseEntity<?> getPossibleDayCampForChild(@PathVariable(name = "childId") Long childId) {
+        List<DayCampEntity> possibleDayCampsForChild = childEnrollmentService.getPossibleDayCampsForChild(childId);
+        DayCampsResponse possibleDayCampsResponse = enrollmentMapper.mapToDayCampResponse(possibleDayCampsForChild);
+        return ResponseEntity.ok(possibleDayCampsResponse);
+    }
+
     @PostMapping(
             path = "/{childId}/{dayCampId}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -41,7 +54,7 @@ class ChildEnrollmentController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('PARENT')")
-    public ResponseEntity<?> getEnrollments(@RequestParam(required = false) List<TimelineLocation> timelineLocation) {
+    public ResponseEntity<?> getAllChildrenEnrollments(@RequestParam(required = false) List<TimelineLocation> timelineLocation) {
         Parent parent = loggedUserUtil.getLoggedParent();
         List<Enrollment> enrollments = childEnrollmentService.getEnrollments(parent);
         EnrollmentsResponse enrollmentsResponse = enrollmentMapper.mapToEnrollmentsResponse(enrollments, timelineLocation);

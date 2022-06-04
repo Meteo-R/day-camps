@@ -6,6 +6,8 @@ import com.mr.daycamps.domain.parent.child.ChildRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 @AllArgsConstructor
 class ChildRepositoryImpl implements ChildRepository {
@@ -23,5 +25,10 @@ class ChildRepositoryImpl implements ChildRepository {
                         .setDayCamps(dayCampMapper.mapDayCamps(childEntity.getDayCamps()))
                         .build())
                 .orElseThrow(() -> new ChildNotFoundException(childId));
+    }
+
+    @Override
+    public ChildEntity getChild(Long childId) {
+        return childDao.findById(childId).orElseThrow(() -> new ChildNotFoundException(childId));
     }
 }
