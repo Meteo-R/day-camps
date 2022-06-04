@@ -7,6 +7,7 @@ import com.mr.daycamps.domain.school.daycamp.DayCampRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
@@ -54,6 +55,11 @@ public class DayCampRepositoryImpl implements DayCampRepository {
         childEntity.setDayCamps(childEntity.getDayCamps().stream().filter(dayCamp -> !dayCamp.getId().equals(dayCampEntity.getId())).collect(Collectors.toSet()));
 
         dayCampDao.save(dayCampEntity);
+    }
+
+    @Override
+    public List<DayCampEntity> getAll() {
+        return dayCampDao.findAll();
     }
 
 }

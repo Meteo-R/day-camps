@@ -1,8 +1,12 @@
-package com.mr.daycamps.api.school.daycamp;
+package com.mr.daycamps.api.daycamp;
 
 import com.mr.daycamps.api.commons.TimelineLocationFilter;
 import com.mr.daycamps.api.parent.ParentResponse;
 import com.mr.daycamps.api.parent.child.ChildResponse;
+import com.mr.daycamps.api.school.SchoolResponse;
+import com.mr.daycamps.api.school.daycamp.AddDayCampRequest;
+import com.mr.daycamps.api.school.daycamp.DayCampResponse;
+import com.mr.daycamps.api.school.daycamp.DayCampsResponse;
 import com.mr.daycamps.domain.school.daycamp.DayCamp;
 import com.mr.daycamps.infrastructure.enrollment.DayCampEntity;
 import com.mr.daycamps.infrastructure.enrollment.TimelineLocation;
@@ -16,7 +20,7 @@ import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
-class DayCampApiMapper {
+public class DayCampApiMapper {
 
     private final TimelineLocationFilter timelineLocationFilter;
 
@@ -43,7 +47,7 @@ class DayCampApiMapper {
                 .build();
     }
 
-    public DayCampsResponse mapToDayCampsResponse(Set<DayCampEntity> dayCamps, List<TimelineLocation> timelineLocation) {
+    public DayCampsResponse mapToSchoolDayCampsResponse(Set<DayCampEntity> dayCamps, List<TimelineLocation> timelineLocation) {
         return DayCampsResponse.builder()
                 .setDayCamps(dayCamps.stream()
                         .map(dayCamp -> DayCampResponse.builder()
@@ -69,6 +73,32 @@ class DayCampApiMapper {
                                         .sorted(Comparator.comparing(ChildResponse::getLastName).thenComparing(ChildResponse::getFirstName))
                                         .collect(Collectors.toList())
                                 )
+                                .build())
+                        .filter(dayCamp -> timelineLocationFilter.doFilter(dayCamp.getStartDate(), dayCamp.getEndDate(), timelineLocation))
+                        .sorted(Comparator.comparing(DayCampResponse::getStartDate))
+                        .collect(Collectors.toList())
+                )
+                .build();
+    }
+
+    public DayCampsResponse mapToAllDayCampsResponse(List<DayCampEntity> dayCamps, List<TimelineLocation> timelineLocation) {
+        return DayCampsResponse.builder()
+                .setDayCamps(dayCamps.stream()
+                        .map(dayCamp -> DayCampResponse.builder()
+                                .setId(dayCamp.getId())
+                                .setName(dayCamp.getName())
+                                .setDescription(dayCamp.getDescription())
+                                .setStartDate(dayCamp.getStartDate())
+                                .setEndDate(dayCamp.getEndDate())
+                                .setPrice(dayCamp.getPrice())
+                                .setCapacity(dayCamp.getCapacity())
+                                .setNumberOfEnrolled(dayCamp.getChildren().size())
+                                .setSchool(SchoolResponse.builder()
+                                        .setName(dayCamp.getSchool().getName())
+                                        .setAddress(dayCamp.getSchool().getAddress())
+                                        .setEmail(dayCamp.getSchool().getEmail())
+                                        .setPhone(dayCamp.getSchool().getPhone())
+                                        .build())
                                 .build())
                         .filter(dayCamp -> timelineLocationFilter.doFilter(dayCamp.getStartDate(), dayCamp.getEndDate(), timelineLocation))
                         .sorted(Comparator.comparing(DayCampResponse::getStartDate))

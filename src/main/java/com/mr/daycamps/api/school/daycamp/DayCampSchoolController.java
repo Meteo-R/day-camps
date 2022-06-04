@@ -1,6 +1,7 @@
 package com.mr.daycamps.api.school.daycamp;
 
 import com.mr.daycamps.api.authentication.LoggedUserUtil;
+import com.mr.daycamps.api.daycamp.DayCampApiMapper;
 import com.mr.daycamps.domain.authentication.School;
 import com.mr.daycamps.domain.school.daycamp.DayCamp;
 import com.mr.daycamps.infrastructure.enrollment.DayCampEntity;
@@ -26,9 +27,9 @@ import java.util.Set;
 @RestController
 @RequestMapping("/api/school/daycamps")
 @AllArgsConstructor
-class DayCampController {
+class DayCampSchoolController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DayCampController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DayCampSchoolController.class);
 
     private final LoggedUserUtil loggedUserUtil;
     private final DayCampApiMapper dayCampMapper;
@@ -55,8 +56,8 @@ class DayCampController {
     public ResponseEntity<?> getDayCamps(@RequestParam(required = false) List<TimelineLocation> timelineLocation) {
         School school = loggedUserUtil.getLoggedSchool();
         Set<DayCampEntity> dayCamps = schoolRepository.getDayCamps(school);
-        DayCampsResponse dayCampResponse = dayCampMapper.mapToDayCampsResponse(dayCamps, timelineLocation);
-        return ResponseEntity.ok(dayCampResponse);
+        DayCampsResponse dayCampsResponse = dayCampMapper.mapToSchoolDayCampsResponse(dayCamps, timelineLocation);
+        return ResponseEntity.ok(dayCampsResponse);
     }
 
 }
