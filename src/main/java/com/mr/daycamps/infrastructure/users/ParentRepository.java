@@ -12,7 +12,7 @@ public interface ParentRepository {
 
     List<ChildEntity> getChildren(Parent parent);
 
-    ChildEntity updateChild(Parent parent, Long childId, Child childUpdateData);
+    void updateChild(Parent parent, Long childId, Child childUpdateData);
 
     void deleteChild(Parent parent, Long childId);
 }

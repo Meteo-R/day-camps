@@ -84,26 +84,30 @@ public class DayCampApiMapper {
     public DayCampsResponse mapToAllDayCampsResponse(List<DayCampEntity> dayCamps, List<TimelineLocation> timelineLocation) {
         return DayCampsResponse.builder()
                 .setDayCamps(dayCamps.stream()
-                        .map(dayCamp -> DayCampResponse.builder()
-                                .setId(dayCamp.getId())
-                                .setName(dayCamp.getName())
-                                .setDescription(dayCamp.getDescription())
-                                .setStartDate(dayCamp.getStartDate())
-                                .setEndDate(dayCamp.getEndDate())
-                                .setPrice(dayCamp.getPrice())
-                                .setCapacity(dayCamp.getCapacity())
-                                .setNumberOfEnrolled(dayCamp.getChildren().size())
-                                .setSchool(SchoolResponse.builder()
-                                        .setName(dayCamp.getSchool().getName())
-                                        .setAddress(dayCamp.getSchool().getAddress())
-                                        .setEmail(dayCamp.getSchool().getEmail())
-                                        .setPhone(dayCamp.getSchool().getPhone())
-                                        .build())
-                                .build())
+                        .map(this::buildDayCampResponse)
                         .filter(dayCamp -> timelineLocationFilter.doFilter(dayCamp.getStartDate(), dayCamp.getEndDate(), timelineLocation))
                         .sorted(Comparator.comparing(DayCampResponse::getStartDate))
                         .collect(Collectors.toList())
                 )
+                .build();
+    }
+
+    public DayCampResponse buildDayCampResponse(DayCampEntity dayCamp) {
+        return DayCampResponse.builder()
+                .setId(dayCamp.getId())
+                .setName(dayCamp.getName())
+                .setDescription(dayCamp.getDescription())
+                .setStartDate(dayCamp.getStartDate())
+                .setEndDate(dayCamp.getEndDate())
+                .setPrice(dayCamp.getPrice())
+                .setCapacity(dayCamp.getCapacity())
+                .setNumberOfEnrolled(dayCamp.getChildren().size())
+                .setSchool(SchoolResponse.builder()
+                        .setName(dayCamp.getSchool().getName())
+                        .setAddress(dayCamp.getSchool().getAddress())
+                        .setEmail(dayCamp.getSchool().getEmail())
+                        .setPhone(dayCamp.getSchool().getPhone())
+                        .build())
                 .build();
     }
 }

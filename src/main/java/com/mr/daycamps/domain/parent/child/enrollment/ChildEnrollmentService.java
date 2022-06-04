@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface ChildEnrollmentService {
 
+    void validateChildAgainstParent(Long childId, Parent parent);
+
     void enrollChild(Long childId, Long dayCampId);
 
     List<Enrollment> getEnrollments(Parent parent);

@@ -3,6 +3,7 @@ package com.mr.daycamps.domain.parent.child.enrollment;
 import com.mr.daycamps.domain.authentication.Parent;
 import com.mr.daycamps.domain.exception.ChildAlreadyEnrolledException;
 import com.mr.daycamps.domain.exception.ChildNotEnrolledException;
+import com.mr.daycamps.domain.exception.ChildNotFoundException;
 import com.mr.daycamps.domain.exception.DayCampCapacityReachedException;
 import com.mr.daycamps.domain.exception.DayCampStartDatePassedException;
 import com.mr.daycamps.domain.exception.OverlappingDayCampsException;
@@ -25,6 +26,14 @@ class ChildEnrollmentServiceImpl implements ChildEnrollmentService {
     private ChildRepository childRepository;
     private DayCampRepository dayCampRepository;
     private ParentRepository parentRepository;
+
+    @Override
+    public void validateChildAgainstParent(Long childId, Parent parent) {
+        parentRepository.getChildren(parent).stream()
+                .filter(child -> child.getId().equals(childId))
+                .findAny()
+                .orElseThrow(() -> new ChildNotFoundException(parent.getUsername(), childId));
+    }
 
     @Override
     public void enrollChild(Long childId, Long dayCampId) {

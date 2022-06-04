@@ -36,6 +36,8 @@ class ChildEnrollmentController {
     )
     @PreAuthorize("hasRole('PARENT')")
     public ResponseEntity<?> getPossibleDayCampForChild(@PathVariable(name = "childId") Long childId) {
+        Parent parent = loggedUserUtil.getLoggedParent();
+        childEnrollmentService.validateChildAgainstParent(childId, parent);
         List<DayCampEntity> possibleDayCampsForChild = childEnrollmentService.getPossibleDayCampsForChild(childId);
         DayCampsResponse possibleDayCampsResponse = enrollmentMapper.mapToDayCampResponse(possibleDayCampsForChild);
         return ResponseEntity.ok(possibleDayCampsResponse);
@@ -48,6 +50,8 @@ class ChildEnrollmentController {
     )
     @PreAuthorize("hasRole('PARENT')")
     public ResponseEntity<?> enrollChild(@PathVariable(name = "childId") Long childId, @PathVariable(name = "dayCampId") Long dayCampId) {
+        Parent parent = loggedUserUtil.getLoggedParent();
+        childEnrollmentService.validateChildAgainstParent(childId, parent);
         childEnrollmentService.enrollChild(childId, dayCampId);
         return ResponseEntity.noContent().build();
     }
@@ -64,6 +68,8 @@ class ChildEnrollmentController {
     @DeleteMapping(path = "/{childId}/{dayCampId}")
     @PreAuthorize("hasRole('PARENT')")
     public ResponseEntity<?> unenrollChild(@PathVariable(name = "childId") Long childId, @PathVariable(name = "dayCampId") Long dayCampId) {
+        Parent parent = loggedUserUtil.getLoggedParent();
+        childEnrollmentService.validateChildAgainstParent(childId, parent);
         childEnrollmentService.unenrollChild(childId, dayCampId);
         return ResponseEntity.noContent().build();
     }

@@ -38,7 +38,7 @@ class ParentRepositoryImpl implements ParentRepository {
     }
 
     @Override
-    public ChildEntity updateChild(Parent parent, Long childId, Child childUpdateData) {
+    public void updateChild(Parent parent, Long childId, Child childUpdateData) {
         Optional<ParentEntity> parentEntityOptional = parentDao.findByUsername(parent.getUsername());
 
         List<ChildEntity> childEntities = parentEntityOptional.map(parentEntity -> new ArrayList<>(parentEntity.getChildren()))
@@ -52,7 +52,7 @@ class ParentRepositoryImpl implements ParentRepository {
         foundChild.setFirstName(childUpdateData.getFirstName());
         foundChild.setLastName(childUpdateData.getLastName());
 
-        return childDao.save(foundChild);
+        childDao.save(foundChild);
     }
 
     @Override
