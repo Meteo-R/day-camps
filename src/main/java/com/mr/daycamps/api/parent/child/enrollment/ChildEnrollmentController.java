@@ -76,4 +76,17 @@ class ChildEnrollmentController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping(
+            path = "/{childId}",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @PreAuthorize("hasRole('PARENT')")
+    public ResponseEntity<?> isChildEnrolledInAnyDayCamp(@PathVariable(name = "childId") Long childId) {
+        Parent parent = loggedUserUtil.getLoggedParent();
+        boolean isChildEnrolledInAnyDayCamp = childEnrollmentService.isChildEnrolledInAnyDayCamp(parent, childId);
+        ChildEnrolledInAnyDayCampResponse response = enrollmentMapper.mapToIsChildEnrolledResponse(isChildEnrolledInAnyDayCamp);
+
+        return ResponseEntity.ok(response);
+    }
+
 }

@@ -15,4 +15,6 @@ public interface ParentRepository {
     void updateChild(Parent parent, Long childId, Child childUpdateData);
 
     void deleteChild(Parent parent, Long childId);
+
+    ChildEntity getChild(Parent parent, Long childId);
 }

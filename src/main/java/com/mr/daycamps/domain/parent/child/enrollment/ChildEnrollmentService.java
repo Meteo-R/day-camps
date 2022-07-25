@@ -16,4 +16,6 @@ public interface ChildEnrollmentService {
     void unenrollChild(Long childId, Long dayCampId);
 
     List<DayCampEntity> getPossibleDayCampsForChild(Long childId);
+
+    boolean isChildEnrolledInAnyDayCamp(Parent parent, Long childId);
 }

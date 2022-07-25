@@ -53,4 +53,10 @@ class EnrollmentApiMapper {
                 )
                 .build();
     }
+
+    public ChildEnrolledInAnyDayCampResponse mapToIsChildEnrolledResponse(boolean isChildEnrolledInAnyDayCamp) {
+        return ChildEnrolledInAnyDayCampResponse.builder()
+                .setIsChildEnrolledInAnyDayCamp(isChildEnrolledInAnyDayCamp)
+                .build();
+    }
 }

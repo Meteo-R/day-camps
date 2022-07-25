@@ -75,6 +75,12 @@ class ChildEnrollmentServiceImpl implements ChildEnrollmentService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public boolean isChildEnrolledInAnyDayCamp(Parent parent, Long childId) {
+        ChildEntity child = parentRepository.getChild(parent, childId);
+        return child.getDayCamps().size() > 0;
+    }
+
     private void validateEnrollmentPrerequisites(ChildEntity child, DayCampEntity dayCamp) {
         validateChildIsNotYetEnrolledInThisDayCamp(child, dayCamp);
         validateDayCampHasNotStartedYet(dayCamp);

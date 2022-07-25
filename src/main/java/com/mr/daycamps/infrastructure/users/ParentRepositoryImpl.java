@@ -78,6 +78,19 @@ class ParentRepositoryImpl implements ParentRepository {
         );
     }
 
+    @Override
+    public ChildEntity getChild(Parent parent, Long childId) {
+        Optional<ParentEntity> parentEntityOptional = parentDao.findByUsername(parent.getUsername());
+
+        ArrayList<ChildEntity> children = parentEntityOptional.map(parentEntity -> new ArrayList<>(parentEntity.getChildren()))
+                .orElseThrow(() -> new ParentNotFoundException(parent.getUsername()));
+
+        return children.stream()
+                .filter(child -> child.getId().equals(childId))
+                .findAny()
+                .orElseThrow(() -> new ChildNotFoundException(parent.getUsername(), childId));
+    }
+
     private ChildEntity saveChild(Child child, ParentEntity parentEntity) {
         ChildEntity childEntity = ChildEntity.builder()
                 .setFirstName(child.getFirstName())
