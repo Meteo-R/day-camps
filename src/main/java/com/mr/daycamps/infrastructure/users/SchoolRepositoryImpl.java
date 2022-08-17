@@ -42,15 +42,20 @@ class SchoolRepositoryImpl implements SchoolRepository {
     }
 
     @Override
-    public void updateDayCamp(School school, Long dayCampId, DayCamp dayCampUpdateData) {
+    public DayCampEntity getDayCamp(School school, Long dayCampId) {
         Optional<SchoolEntity> schoolEntityOptional = schoolDao.findByUsername(school.getUsername());
         List<DayCampEntity> dayCampEntities = schoolEntityOptional.map(schoolEntity -> new ArrayList<>(schoolEntity.getDayCamps()))
                 .orElseThrow(() -> new SchoolNotFoundException(school.getUsername()));
 
-        DayCampEntity foundDayCamp = dayCampEntities.stream()
+        return dayCampEntities.stream()
                 .filter(dayCampEntity -> Objects.equals(dayCampEntity.getId(), dayCampId))
                 .findAny()
                 .orElseThrow(() -> new DayCampNotFoundException(school.getUsername(), dayCampId));
+    }
+
+    @Override
+    public void updateDayCamp(School school, Long dayCampId, DayCamp dayCampUpdateData) {
+        DayCampEntity foundDayCamp = getDayCamp(school, dayCampId);
 
         validateDayCampDatesChange(foundDayCamp, dayCampUpdateData);
         validateCapacityChange(foundDayCamp, dayCampUpdateData);

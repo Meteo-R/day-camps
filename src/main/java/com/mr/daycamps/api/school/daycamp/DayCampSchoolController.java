@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -62,6 +63,18 @@ class DayCampSchoolController {
         Set<DayCampEntity> dayCamps = schoolRepository.getDayCamps(school);
         DayCampsResponse dayCampsResponse = dayCampMapper.mapToSchoolDayCampsResponse(dayCamps, timelineLocation);
         return ResponseEntity.ok(dayCampsResponse);
+    }
+
+    @GetMapping(
+            path = "/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @PreAuthorize("hasRole('SCHOOL')")
+    public ResponseEntity<?> getDayCamp(@PathVariable(name = "id") Long dayCampId) {
+        School school = loggedUserUtil.getLoggedSchool();
+        DayCampEntity dayCamp = schoolRepository.getDayCamp(school, dayCampId);
+        DayCampResponse dayCampResponse = dayCampMapper.mapToSchoolDayCampResponse(dayCamp);
+        return ResponseEntity.ok(dayCampResponse);
     }
 
     @PutMapping(
