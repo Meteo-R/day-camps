@@ -4,7 +4,7 @@ import com.mr.daycamps.api.commons.TimelineLocationFilter;
 import com.mr.daycamps.api.parent.ParentResponse;
 import com.mr.daycamps.api.parent.child.ChildResponse;
 import com.mr.daycamps.api.school.SchoolResponse;
-import com.mr.daycamps.api.school.daycamp.AddDayCampRequest;
+import com.mr.daycamps.api.school.daycamp.AddUpdateDayCampRequest;
 import com.mr.daycamps.api.school.daycamp.DayCampResponse;
 import com.mr.daycamps.api.school.daycamp.DayCampsResponse;
 import com.mr.daycamps.domain.school.daycamp.DayCamp;
@@ -24,14 +24,14 @@ public class DayCampApiMapper {
 
     private final TimelineLocationFilter timelineLocationFilter;
 
-    public DayCamp mapAddDayCampRequest(AddDayCampRequest addDayCampRequest) {
+    public DayCamp mapAddDayCampRequest(AddUpdateDayCampRequest addUpdateDayCampRequest) {
         return DayCamp.builder()
-                .setName(addDayCampRequest.getName())
-                .setDescription(addDayCampRequest.getDescription())
-                .setStartDate(addDayCampRequest.getStartDate())
-                .setEndDate(addDayCampRequest.getEndDate())
-                .setPrice(addDayCampRequest.getPrice())
-                .setCapacity(addDayCampRequest.getCapacity())
+                .setName(addUpdateDayCampRequest.getName())
+                .setDescription(addUpdateDayCampRequest.getDescription())
+                .setStartDate(addUpdateDayCampRequest.getStartDate())
+                .setEndDate(addUpdateDayCampRequest.getEndDate())
+                .setPrice(addUpdateDayCampRequest.getPrice())
+                .setCapacity(addUpdateDayCampRequest.getCapacity())
                 .build();
     }
 

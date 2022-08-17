@@ -10,7 +10,7 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-public class AddDayCampRequest {
+public class AddUpdateDayCampRequest {
 
     @NotBlank
     private String name;

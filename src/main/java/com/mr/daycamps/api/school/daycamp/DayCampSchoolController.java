@@ -15,7 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,7 +44,7 @@ class DayCampSchoolController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @PreAuthorize("hasRole('SCHOOL')")
-    public ResponseEntity<?> addDayCamp(@Valid @RequestBody AddDayCampRequest addDayCampRequest) {
+    public ResponseEntity<?> addDayCamp(@Valid @RequestBody AddUpdateDayCampRequest addDayCampRequest) {
         DayCamp dayCamp = dayCampMapper.mapAddDayCampRequest(addDayCampRequest);
         School school = loggedUserUtil.getLoggedSchool();
 
@@ -60,6 +62,20 @@ class DayCampSchoolController {
         Set<DayCampEntity> dayCamps = schoolRepository.getDayCamps(school);
         DayCampsResponse dayCampsResponse = dayCampMapper.mapToSchoolDayCampsResponse(dayCamps, timelineLocation);
         return ResponseEntity.ok(dayCampsResponse);
+    }
+
+    @PutMapping(
+            path = "/{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
+    @PreAuthorize("hasRole('SCHOOL')")
+    public ResponseEntity<?> modifyDayCamp(@PathVariable(name = "id") Long dayCampId, @Valid @RequestBody AddUpdateDayCampRequest updateDayCampRequest) {
+        DayCamp dayCampUpdateData = dayCampMapper.mapAddDayCampRequest(updateDayCampRequest);
+        School school = loggedUserUtil.getLoggedSchool();
+
+        schoolRepository.updateDayCamp(school, dayCampId, dayCampUpdateData);
+        LOGGER.info("Day camp with id " + dayCampId + " updated successfully");
+        return ResponseEntity.noContent().build();
     }
 
 }

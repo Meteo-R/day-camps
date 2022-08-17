@@ -3,7 +3,9 @@ package com.mr.daycamps.api.exception.handling;
 import com.mr.daycamps.domain.exception.ChildAlreadyEnrolledException;
 import com.mr.daycamps.domain.exception.ChildNotEnrolledException;
 import com.mr.daycamps.domain.exception.ChildNotFoundException;
+import com.mr.daycamps.domain.exception.DayCampCapacityLoweredBelowTotalEnrollmentException;
 import com.mr.daycamps.domain.exception.DayCampCapacityReachedException;
+import com.mr.daycamps.domain.exception.DayCampDatesChangeNotAllowedException;
 import com.mr.daycamps.domain.exception.DayCampNotFoundException;
 import com.mr.daycamps.domain.exception.DayCampStartDatePassedException;
 import com.mr.daycamps.domain.exception.EnrolledChildDeletionAttemptException;
@@ -38,7 +40,9 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
             DayCampCapacityReachedException.class,
             OverlappingDayCampsException.class,
             ChildNotEnrolledException.class,
-            EnrolledChildDeletionAttemptException.class
+            EnrolledChildDeletionAttemptException.class,
+            DayCampDatesChangeNotAllowedException.class,
+            DayCampCapacityLoweredBelowTotalEnrollmentException.class
     })
     protected ResponseEntity<?> handleBadRequest(RuntimeException exception, WebRequest request) {
         String responseBody = exception.getMessage();

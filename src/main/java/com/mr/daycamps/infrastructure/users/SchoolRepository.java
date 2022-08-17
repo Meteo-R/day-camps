@@ -10,4 +10,6 @@ public interface SchoolRepository {
     DayCampEntity addDayCamp(School school, DayCamp dayCamp);
 
     Set<DayCampEntity> getDayCamps(School school);
+
+    void updateDayCamp(School school, Long dayCampId, DayCamp dayCampUpdateData);
 }
